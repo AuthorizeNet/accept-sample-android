@@ -1,25 +1,25 @@
 <resources>
-    <string name="app_name">AcceptSample</string>
+  <string name="app_name">AcceptSample</string>
 
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="hello_world">Hello world!</string>
+  <string name="action_settings">Settings</string>
+  <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="web_checkout">Web Checkout</string>
-    <string name="encrypt">Encrypt</string>
+  <string name="web_checkout">Web Checkout</string>
+  <string name="encrypt">Encrypt</string>
 
-    <string name="invalid_card_number">Invalid Card Number</string>
-    <string name="invalid_month">Invalid Month</string>
-    <string name="two_digit_month">Two Digit Month Required</string>
-    <string name="invalid_year">Invalid Year</string>
-    <string name="invalid_cvv">Invalid CVV</string>
-    <string name="invalid_zipcode">Invalid Zipcode</string>
-    <string name="error">Error</string>
-    <string name="code">"Code: "</string>
-    <string name="message">"Message: "</string>
-    <string name="extra_message">"Extra Message: "</string>
-    <string name="encrypted_card_data">Encrypted Card Data</string>
-    <string name="decision">"Decision: "</string>
-    <string name="encrypted_data">"Encrypted Data: "</string>
+  <string name="invalid_card_number">Invalid Card Number</string>
+  <string name="invalid_month">Invalid Month</string>
+  <string name="two_digit_month">Two Digit Month Required</string>
+  <string name="invalid_year">Invalid Year</string>
+  <string name="invalid_cvv">Invalid CVV</string>
+  <string name="invalid_zipcode">Invalid Zipcode</string>
+  <string name="error">Error</string>
+  <string name="code">"Code: "</string>
+  <string name="message">"Message: "</string>
+  <string name="extra_message">"Extra Message: "</string>
+  <string name="encrypted_card_data">Encrypted Card Data</string>
+  <string name="decision">"Decision: "</string>
+  <string name="encrypted_data">"Encrypted Data: "</string>
 </resources>
