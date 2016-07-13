@@ -2,11 +2,11 @@ package net.authorize.acceptsdk.sampleapp.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import net.authorize.acceptsdk.AcceptInvalidCardException;
 import net.authorize.acceptsdk.AcceptSDKApiClient;
 import net.authorize.acceptsdk.datamodel.error.AcceptError;
 import net.authorize.acceptsdk.datamodel.merchant.ClientKeyBasedMerchantAuthentication;
@@ -26,6 +25,8 @@ import net.authorize.acceptsdk.datamodel.transaction.EncryptTransactionObject;
 import net.authorize.acceptsdk.datamodel.transaction.TransactionType;
 import net.authorize.acceptsdk.datamodel.transaction.callbacks.EncryptTransactionCallback;
 import net.authorize.acceptsdk.datamodel.transaction.response.EncryptTransactionResponse;
+import net.authorize.acceptsdk.exception.AcceptInvalidCardException;
+import net.authorize.acceptsdk.exception.AcceptSDKException;
 import net.authorize.acceptsdk.sampleapp.R;
 
 /**
@@ -41,8 +42,9 @@ public class AcceptCheckoutFragment extends Fragment
   private final String CVV = "256";
   private final String POSTAL_CODE = "98001";
   private final String CLIENT_KEY =
-      "6gSuV295YD86Mq4d86zEsx8C839uMVVjfXm9N4wr6DRuhTHpDU97NFyKtfZncUq81111";
-  private final String API_LOGIN_ID = "6AB64hcB"; // replace with YOUR_API_LOGIN_ID
+      "6gSuV295YD86Mq4d86zEsx8C839uMVVjfXm9N4wr6DRuhTHpDU97NFyKtfZncUq8";
+      // replace with your CLIENT KEY
+  private final String API_LOGIN_ID = "6AB64hcB"; // replace with your API LOGIN_ID
 
   private final int MIN_CARD_NUMBER_LENGTH = 13;
   private final int MIN_YEAR_LENGTH = 2;
@@ -77,10 +79,14 @@ public class AcceptCheckoutFragment extends Fragment
     //         parameters:
     //         1) Context - current context
     //         2) AcceptSDKApiClient.Environment - Authorize.net ENVIRONMENT
-    apiClient = new AcceptSDKApiClient.Builder(getActivity(),
-        AcceptSDKApiClient.Environment.SANDBOX).setConnectionTimeout(
-        4000) // optional connection time out in milliseconds
-        .build();
+    try {
+      apiClient = new AcceptSDKApiClient.Builder(getActivity(),
+          AcceptSDKApiClient.Environment.SANDBOX).setConnectionTimeout(
+          4000) // optional connection time out in milliseconds
+          .build();
+    } catch (AcceptSDKException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,15 +135,14 @@ public class AcceptCheckoutFragment extends Fragment
       // 1) EncryptTransactionObject - The transactionObject for the current transaction
       // 2) callback - callback of transaction
       apiClient.performEncryption(transactionObject, this);
-    } catch (NullPointerException e) {
-      Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-      if (progressDialog.isShowing()) progressDialog.dismiss();
-      e.printStackTrace();
     } catch (AcceptInvalidCardException e) {
       // Handle exception if the card is invalid
       Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
       if (progressDialog.isShowing()) progressDialog.dismiss();
-
+      e.printStackTrace();
+    } catch (AcceptSDKException e) {
+      Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+      if (progressDialog.isShowing()) progressDialog.dismiss();
       e.printStackTrace();
     }
   }
@@ -255,8 +260,7 @@ public class AcceptCheckoutFragment extends Fragment
     });
   }
 
-  private EncryptTransactionObject prepareTestTransactionObject()
-      throws AcceptInvalidCardException {
+  private EncryptTransactionObject prepareTestTransactionObject() throws AcceptSDKException {
     ClientKeyBasedMerchantAuthentication merchantAuthentication =
         ClientKeyBasedMerchantAuthentication.
             createMerchantAuthentication(API_LOGIN_ID, CLIENT_KEY);
@@ -280,7 +284,7 @@ public class AcceptCheckoutFragment extends Fragment
   /**
    * prepares a transaction object with dummy data to be used with the Gateway transactions
    */
-  private EncryptTransactionObject prepareTransactionObject() throws AcceptInvalidCardException {
+  private EncryptTransactionObject prepareTransactionObject() throws AcceptSDKException {
     ClientKeyBasedMerchantAuthentication merchantAuthentication =
         ClientKeyBasedMerchantAuthentication.
             createMerchantAuthentication(API_LOGIN_ID, CLIENT_KEY);
@@ -294,11 +298,15 @@ public class AcceptCheckoutFragment extends Fragment
   }
 
   public void hideSoftKeyboard() {
-    if (getActivity().getCurrentFocus() != null) {
+    if (getActivity() != null && getActivity().getCurrentFocus() != null) {
       InputMethodManager imm =
           (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
       imm.hideSoftInputFromInputMethod(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
+  }
+
+  @Override public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
   }
 
   @Override public void onEncryptionFinished(EncryptTransactionResponse response) {
