@@ -1,14 +1,17 @@
 package net.authorize.acceptsdk.sampleapp.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import net.authorize.acceptsdk.AcceptInvalidCardException;
 import net.authorize.acceptsdk.AcceptSDKApiClient;
+import net.authorize.acceptsdk.datamodel.error.AcceptError;
 import net.authorize.acceptsdk.datamodel.merchant.ClientKeyBasedMerchantAuthentication;
 import net.authorize.acceptsdk.datamodel.transaction.CardData;
 import net.authorize.acceptsdk.datamodel.transaction.EncryptTransactionObject;
@@ -37,7 +41,7 @@ public class AcceptCheckoutFragment extends Fragment
   private final String CVV = "256";
   private final String POSTAL_CODE = "98001";
   private final String CLIENT_KEY =
-      "6gSuV295YD86Mq4d86zEsx8C839uMVVjfXm9N4wr6DRuhTHpDU97NFyKtfZncUq8";
+      "6gSuV295YD86Mq4d86zEsx8C839uMVVjfXm9N4wr6DRuhTHpDU97NFyKtfZncUq81111";
   private final String API_LOGIN_ID = "6AB64hcB"; // replace with YOUR_API_LOGIN_ID
 
   private final int MIN_CARD_NUMBER_LENGTH = 13;
@@ -83,7 +87,11 @@ public class AcceptCheckoutFragment extends Fragment
       Bundle savedInstanceState) {
 
     View view = inflater.inflate(R.layout.fragment_accept_checkout, container, false);
+    initialize(view);
+    return view;
+  }
 
+  private void initialize(View view) {
     cardNumberView = (EditText) view.findViewById(R.id.card_number_view);
     setUpCreditCardEditText();
     monthView = (EditText) view.findViewById(R.id.date_month_view);
@@ -96,7 +104,15 @@ public class AcceptCheckoutFragment extends Fragment
     responseLayout = (RelativeLayout) view.findViewById(R.id.response_layout);
     responseTitle = (TextView) view.findViewById(R.id.encrypted_data_title);
     responseValue = (TextView) view.findViewById(R.id.encrypted_data_view);
-    return view;
+    preFillLayoutWithDummyData();
+  }
+
+  //TODO: This is only for testing purpose need to remove in final code.
+  private void preFillLayoutWithDummyData() {
+    cardNumberView.setText(ACCOUNT_NUMBER);
+    monthView.setText(EXPIRATION_MONTH);
+    yearView.setText(EXPIRATION_YEAR);
+    cvvView.setText(CVV);
   }
 
   @Override public void onClick(View v) {
@@ -106,8 +122,8 @@ public class AcceptCheckoutFragment extends Fragment
         ProgressDialog.show(getActivity(), "Please Wait", "Encrypting Card Data...", true);
     if (responseLayout.getVisibility() == View.VISIBLE) responseLayout.setVisibility(View.GONE);
 
-    EncryptTransactionObject transactionObject = prepareTransactionObject();
     try {
+      EncryptTransactionObject transactionObject = prepareTransactionObject();
       // make a call to encryption to API
       // parameters:
       // 1) EncryptTransactionObject - The transactionObject for the current transaction
@@ -116,6 +132,13 @@ public class AcceptCheckoutFragment extends Fragment
     } catch (NullPointerException e) {
       Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
       if (progressDialog.isShowing()) progressDialog.dismiss();
+      e.printStackTrace();
+    } catch (AcceptInvalidCardException e) {
+      // Handle exception if the card is invalid
+      Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+      if (progressDialog.isShowing()) progressDialog.dismiss();
+
+      e.printStackTrace();
     }
   }
 
@@ -232,69 +255,8 @@ public class AcceptCheckoutFragment extends Fragment
     });
   }
 
-  @Override public void onEncryptionFinished(EncryptTransactionResponse response) {
-    if (responseLayout.getVisibility() != View.VISIBLE) responseLayout.setVisibility(View.VISIBLE);
-    if (progressDialog.isShowing()) progressDialog.dismiss();
-    responseTitle.setText(R.string.encrypted_card_data);
-    responseValue.setText(getString(R.string.encrypted_data) + response.getDataValue());
-    //        responseValue.setText(getString(R.string.decision) + response.getDecision()
-    //                + "\n" +getString(R.string.encrypted_data) + response.getEncryptedPaymentData());
-  }
-
-/*    private void setUpZipCodeEditText() {
-        zipCodeView.addTextChangedListener(new TextWatcher() {
-            private boolean dashDeleted;
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // check if a '-' was deleted
-                CharSequence charDeleted = s.subSequence(start, start + count);
-                dashDeleted = "-".equals(charDeleted.toString());
-            }
-
-            public void afterTextChanged(Editable editable) {
-                // disable text watcher
-                zipCodeView.removeTextChangedListener(this);
-
-                // record cursor position as setting the text in the textview
-                // places the cursor at the end
-                int cursorPosition = zipCodeView.getSelectionStart();
-                String withSpaces = formatText(editable);
-                zipCodeView.setText(withSpaces);
-                // set the cursor at the last position + the spaces added since the
-                // space are always added before the cursor
-                zipCodeView.setSelection(cursorPosition + (withSpaces.length() - editable.length()));
-
-                // if a '-' was deleted also deleted just move the cursor
-                // before the space
-                if (dashDeleted) {
-                    zipCodeView.setSelection(zipCodeView.getSelectionStart() - 1);
-                    dashDeleted = false;
-                }
-
-                // enable text watcher
-                zipCodeView.addTextChangedListener(this);
-            }
-
-            private String formatText(CharSequence text) {
-                StringBuilder formatted = new StringBuilder();
-                int count = 0;
-                for (int i = 0; i < text.length(); ++i) {
-                    if (Character.isDigit(text.charAt(i))) {
-                        if (count % 5 == 0 && count > 0)
-                            formatted.append("-");
-                        formatted.append(text.charAt(i));
-                        ++count;
-                    }
-                }
-                return formatted.toString();
-            }
-        });
-    }*/
-
-  private EncryptTransactionObject prepareTestTransactionObject() {
+  private EncryptTransactionObject prepareTestTransactionObject()
+      throws AcceptInvalidCardException {
     ClientKeyBasedMerchantAuthentication merchantAuthentication =
         ClientKeyBasedMerchantAuthentication.
             createMerchantAuthentication(API_LOGIN_ID, CLIENT_KEY);
@@ -307,34 +269,18 @@ public class AcceptCheckoutFragment extends Fragment
         .merchantAuthentication(merchantAuthentication).build();
   }
 
-  private CardData prepareTestCardData() {
-    CardData cardData = null;
-    try {
-      cardData = new CardData.Builder(ACCOUNT_NUMBER, EXPIRATION_MONTH, EXPIRATION_YEAR).build();
-    } catch (AcceptInvalidCardException e) {
-      // Handle exception if the card is invalid
-      Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-      e.printStackTrace();
-    }
-    return cardData;
+  private CardData prepareTestCardData() throws AcceptInvalidCardException {
+    return new CardData.Builder(ACCOUNT_NUMBER, EXPIRATION_MONTH, EXPIRATION_YEAR).build();
   }
 
-  private CardData prepareCardDataFromFields() {
-    CardData cardData = null;
-    try {
-      cardData = new CardData.Builder(cardNumber, month, year).build();
-    } catch (AcceptInvalidCardException e) {
-      // Handle exception if the card is invalid
-      Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-      e.printStackTrace();
-    }
-    return cardData;
+  private CardData prepareCardDataFromFields() throws AcceptInvalidCardException {
+    return new CardData.Builder(cardNumber, month, year).build();
   }
 
   /**
    * prepares a transaction object with dummy data to be used with the Gateway transactions
    */
-  private EncryptTransactionObject prepareTransactionObject() {
+  private EncryptTransactionObject prepareTransactionObject() throws AcceptInvalidCardException {
     ClientKeyBasedMerchantAuthentication merchantAuthentication =
         ClientKeyBasedMerchantAuthentication.
             createMerchantAuthentication(API_LOGIN_ID, CLIENT_KEY);
@@ -347,20 +293,30 @@ public class AcceptCheckoutFragment extends Fragment
         .merchantAuthentication(merchantAuthentication).build();
   }
 
-
-
-  /*  @Override
-    public void onErrorReceived(SDKError error) {
-        if(responseLayout.getVisibility() != View.VISIBLE)
-            responseLayout.setVisibility(View.VISIBLE);
-        if(progressDialog.isShowing())
-            progressDialog.dismiss();
-        responseTitle.setText(R.string.error);
-        responseValue.setText(getString(R.string.code) + error.getErrorCode()
-                + "\n" +getString(R.string.message) + error.getErrorMessage().toString()
-                + "\n" +getString(R.string.extra_message) + error.getErrorExtraMessage().toString());
-        Log.d(TAG, "onErrorReceived > " + error.getErrorExtraMessage().toString());
+  public void hideSoftKeyboard() {
+    if (getActivity().getCurrentFocus() != null) {
+      InputMethodManager imm =
+          (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.hideSoftInputFromInputMethod(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
+  }
 
-    */
+  @Override public void onEncryptionFinished(EncryptTransactionResponse response) {
+    hideSoftKeyboard();
+    if (responseLayout.getVisibility() != View.VISIBLE) responseLayout.setVisibility(View.VISIBLE);
+    if (progressDialog.isShowing()) progressDialog.dismiss();
+    responseTitle.setText(R.string.encrypted_card_data);
+    responseValue.setText(getString(R.string.encrypted_data) + response.getDataValue());
+  }
+
+  @Override public void onErrorReceived(AcceptError error) {
+    hideSoftKeyboard();
+    if (responseLayout.getVisibility() != View.VISIBLE) responseLayout.setVisibility(View.VISIBLE);
+    if (progressDialog.isShowing()) progressDialog.dismiss();
+    responseTitle.setText(R.string.error);
+    responseValue.setText(
+        getString(R.string.code) + error.getErrorCode() + "\n" + getString(R.string.message) + error
+            .getErrorMessage()
+            .toString() + "\n" + getString(R.string.extra_message));
+  }
 }
