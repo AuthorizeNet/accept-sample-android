@@ -2,7 +2,6 @@ package net.authorize.acceptsdk.sampleapp.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -22,6 +21,7 @@ import net.authorize.acceptsdk.datamodel.error.AcceptError;
 import net.authorize.acceptsdk.datamodel.merchant.ClientKeyBasedMerchantAuthentication;
 import net.authorize.acceptsdk.datamodel.transaction.CardData;
 import net.authorize.acceptsdk.datamodel.transaction.EncryptTransactionObject;
+import net.authorize.acceptsdk.datamodel.transaction.TransactionObject;
 import net.authorize.acceptsdk.datamodel.transaction.TransactionType;
 import net.authorize.acceptsdk.datamodel.transaction.callbacks.EncryptTransactionCallback;
 import net.authorize.acceptsdk.datamodel.transaction.response.EncryptTransactionResponse;
@@ -36,14 +36,14 @@ public class AcceptCheckoutFragment extends Fragment
     implements View.OnClickListener, EncryptTransactionCallback {
 
   public static final String TAG = "WebCheckoutFragment";
-  private final String ACCOUNT_NUMBER = "4111111111111111";
+  private final String CARD_NUMBER = "4111111111111111";
   private final String EXPIRATION_MONTH = "11";
   private final String EXPIRATION_YEAR = "2017";
   private final String CVV = "256";
   private final String POSTAL_CODE = "98001";
   private final String CLIENT_KEY =
       "6gSuV295YD86Mq4d86zEsx8C839uMVVjfXm9N4wr6DRuhTHpDU97NFyKtfZncUq8";
-      // replace with your CLIENT KEY
+  // replace with your CLIENT KEY
   private final String API_LOGIN_ID = "6AB64hcB"; // replace with your API LOGIN_ID
 
   private final int MIN_CARD_NUMBER_LENGTH = 13;
@@ -115,7 +115,7 @@ public class AcceptCheckoutFragment extends Fragment
 
   //TODO: This is only for testing purpose need to remove in final code.
   private void preFillLayoutWithDummyData() {
-    cardNumberView.setText(ACCOUNT_NUMBER);
+    cardNumberView.setText(CARD_NUMBER);
     monthView.setText(EXPIRATION_MONTH);
     yearView.setText(EXPIRATION_YEAR);
     cvvView.setText(CVV);
@@ -274,7 +274,7 @@ public class AcceptCheckoutFragment extends Fragment
   }
 
   private CardData prepareTestCardData() throws AcceptInvalidCardException {
-    return new CardData.Builder(ACCOUNT_NUMBER, EXPIRATION_MONTH, EXPIRATION_YEAR).build();
+    return new CardData.Builder(CARD_NUMBER, EXPIRATION_MONTH, EXPIRATION_YEAR).build();
   }
 
   private CardData prepareCardDataFromFields() throws AcceptInvalidCardException {
@@ -290,7 +290,7 @@ public class AcceptCheckoutFragment extends Fragment
             createMerchantAuthentication(API_LOGIN_ID, CLIENT_KEY);
 
     // create a transaction object by calling the predefined api for creation
-    return EncryptTransactionObject.
+    return TransactionObject.
         createTransactionObject(
             TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
         .cardData(prepareCardDataFromFields()) // card data to be encrypted
@@ -303,10 +303,6 @@ public class AcceptCheckoutFragment extends Fragment
           (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
       imm.hideSoftInputFromInputMethod(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
-  }
-
-  @Override public void onConfigurationChanged(Configuration newConfig) {
-    super.onConfigurationChanged(newConfig);
   }
 
   @Override public void onEncryptionFinished(EncryptTransactionResponse response) {
@@ -322,9 +318,11 @@ public class AcceptCheckoutFragment extends Fragment
     if (responseLayout.getVisibility() != View.VISIBLE) responseLayout.setVisibility(View.VISIBLE);
     if (progressDialog.isShowing()) progressDialog.dismiss();
     responseTitle.setText(R.string.error);
-    responseValue.setText(
-        getString(R.string.code) + error.getErrorCode() + "\n" + getString(R.string.message) + error
-            .getErrorMessage()
-            .toString() + "\n" + getString(R.string.extra_message));
+    String errorString = getString(R.string.code) + error.getErrorCode() + "\n" +
+        getString(R.string.message) + error.getErrorMessage();
+    if (error.getErrorExtraMessage() != null) {
+      errorString += "\n" + getString(R.string.extra_message) + error.getErrorExtraMessage();
+    }
+    responseValue.setText(errorString);
   }
 }

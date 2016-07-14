@@ -1,5 +1,6 @@
 package net.authorize.acceptsdk.sampleapp;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -24,5 +25,9 @@ public class MainActivity extends AppCompatActivity {
           .replace(R.id.accept_checkout_fragment_container, checkoutFragment, TAG_FRAGMENT_CHECKOUT)
           .commit();
     }
+  }
+
+  @Override public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
   }
 }
