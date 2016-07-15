@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import net.authorize.acceptsdk.AcceptSDKApiClient;
-import net.authorize.acceptsdk.datamodel.error.AcceptError;
+import net.authorize.acceptsdk.datamodel.common.Message;
 import net.authorize.acceptsdk.datamodel.merchant.ClientKeyBasedMerchantAuthentication;
 import net.authorize.acceptsdk.datamodel.transaction.CardData;
 import net.authorize.acceptsdk.datamodel.transaction.EncryptTransactionObject;
@@ -25,6 +25,7 @@ import net.authorize.acceptsdk.datamodel.transaction.TransactionObject;
 import net.authorize.acceptsdk.datamodel.transaction.TransactionType;
 import net.authorize.acceptsdk.datamodel.transaction.callbacks.EncryptTransactionCallback;
 import net.authorize.acceptsdk.datamodel.transaction.response.EncryptTransactionResponse;
+import net.authorize.acceptsdk.datamodel.transaction.response.ErrorTransactionResponse;
 import net.authorize.acceptsdk.exception.AcceptInvalidCardException;
 import net.authorize.acceptsdk.exception.AcceptSDKException;
 import net.authorize.acceptsdk.sampleapp.R;
@@ -313,16 +314,15 @@ public class AcceptCheckoutFragment extends Fragment
     responseValue.setText(getString(R.string.encrypted_data) + response.getDataValue());
   }
 
-  @Override public void onErrorReceived(AcceptError error) {
+  @Override public void onErrorReceived(ErrorTransactionResponse errorResponse) {
     hideSoftKeyboard();
     if (responseLayout.getVisibility() != View.VISIBLE) responseLayout.setVisibility(View.VISIBLE);
     if (progressDialog.isShowing()) progressDialog.dismiss();
     responseTitle.setText(R.string.error);
-    String errorString = getString(R.string.code) + error.getErrorCode() + "\n" +
-        getString(R.string.message) + error.getErrorMessage();
-    if (error.getErrorExtraMessage() != null) {
-      errorString += "\n" + getString(R.string.extra_message) + error.getErrorExtraMessage();
-    }
+    Message error = errorResponse.getFirstErrorMessage();
+    String errorString = getString(R.string.code) + error.getMessageCode() + "\n" +
+        getString(R.string.message) + error.getMessageText();
+
     responseValue.setText(errorString);
   }
 }
