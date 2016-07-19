@@ -1,0 +1,3 @@
+include ':app' ,':accept-sdk-android'
+project(':accept-sdk-android').projectDir=new File('../accept-sdk-android')
+
