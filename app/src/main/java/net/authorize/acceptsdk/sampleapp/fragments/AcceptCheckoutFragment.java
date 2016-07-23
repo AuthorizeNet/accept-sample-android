@@ -19,6 +19,8 @@ import android.widget.Toast;
 import net.authorize.acceptsdk.AcceptSDKApiClient;
 import net.authorize.acceptsdk.datamodel.common.Message;
 import net.authorize.acceptsdk.datamodel.merchant.ClientKeyBasedMerchantAuthentication;
+import net.authorize.acceptsdk.datamodel.merchant.FingerPrintBasedMerchantAuthentication;
+import net.authorize.acceptsdk.datamodel.merchant.FingerPrintData;
 import net.authorize.acceptsdk.datamodel.transaction.CardData;
 import net.authorize.acceptsdk.datamodel.transaction.EncryptTransactionObject;
 import net.authorize.acceptsdk.datamodel.transaction.TransactionObject;
@@ -26,8 +28,6 @@ import net.authorize.acceptsdk.datamodel.transaction.TransactionType;
 import net.authorize.acceptsdk.datamodel.transaction.callbacks.EncryptTransactionCallback;
 import net.authorize.acceptsdk.datamodel.transaction.response.EncryptTransactionResponse;
 import net.authorize.acceptsdk.datamodel.transaction.response.ErrorTransactionResponse;
-import net.authorize.acceptsdk.exception.AcceptInvalidCardException;
-import net.authorize.acceptsdk.exception.AcceptSDKException;
 import net.authorize.acceptsdk.sampleapp.R;
 
 /**
@@ -76,16 +76,20 @@ public class AcceptCheckoutFragment extends Fragment
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    //         build an Accept SDK Api client to make API calls.
-    //         parameters:
-    //         1) Context - current context
-    //         2) AcceptSDKApiClient.Environment - Authorize.net ENVIRONMENT
+
+    /*
+       build an Accept SDK Api client to make API calls.
+       parameters:
+         1) Context - current context
+         2) AcceptSDKApiClient.Environment - Authorize.net ENVIRONMENT
+    */
+
     try {
       apiClient = new AcceptSDKApiClient.Builder(getActivity(),
           AcceptSDKApiClient.Environment.SANDBOX).setConnectionTimeout(
           4000) // optional connection time out in milliseconds
           .build();
-    } catch (AcceptSDKException e) {
+    } catch (NullPointerException e) {
       e.printStackTrace();
     }
   }
@@ -111,15 +115,6 @@ public class AcceptCheckoutFragment extends Fragment
     responseLayout = (RelativeLayout) view.findViewById(R.id.response_layout);
     responseTitle = (TextView) view.findViewById(R.id.encrypted_data_title);
     responseValue = (TextView) view.findViewById(R.id.encrypted_data_view);
-    preFillLayoutWithDummyData();
-  }
-
-  //TODO: This is only for testing purpose need to remove in final code.
-  private void preFillLayoutWithDummyData() {
-    cardNumberView.setText(CARD_NUMBER);
-    monthView.setText(EXPIRATION_MONTH);
-    yearView.setText(EXPIRATION_YEAR);
-    cvvView.setText(CVV);
   }
 
   @Override public void onClick(View v) {
@@ -131,20 +126,104 @@ public class AcceptCheckoutFragment extends Fragment
 
     try {
       EncryptTransactionObject transactionObject = prepareTransactionObject();
-      // make a call to encryption to API
-      // parameters:
-      // 1) EncryptTransactionObject - The transactionObject for the current transaction
-      // 2) callback - callback of transaction
-      apiClient.performEncryption(transactionObject, this);
-    } catch (AcceptInvalidCardException e) {
-      // Handle exception if the card is invalid
+
+      /*
+        Make a call to encryption to API
+        parameters:
+          1) EncryptTransactionObject - The transactionObject for the current transaction
+          2) callback - callback of transaction
+       */
+      apiClient.getTokenWithRequest(transactionObject, this);
+    } catch (NullPointerException e) {
+      // Handle exception transactionObject or callback is null.
       Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
       if (progressDialog.isShowing()) progressDialog.dismiss();
       e.printStackTrace();
-    } catch (AcceptSDKException e) {
-      Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-      if (progressDialog.isShowing()) progressDialog.dismiss();
-      e.printStackTrace();
+    }
+  }
+
+  /**
+   * prepares a transaction object with dummy data to be used with the Gateway transactions
+   */
+  private EncryptTransactionObject prepareTransactionObject() {
+    ClientKeyBasedMerchantAuthentication merchantAuthentication =
+        ClientKeyBasedMerchantAuthentication.
+            createMerchantAuthentication(API_LOGIN_ID, CLIENT_KEY);
+
+    // create a transaction object by calling the predefined api for creation
+    return TransactionObject.
+        createTransactionObject(
+            TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
+        .cardData(prepareCardDataFromFields()) // card data to be encrypted
+        .merchantAuthentication(merchantAuthentication).build();
+  }
+
+  //TODO: Need to remove this code in production
+  private EncryptTransactionObject prepareTransactionObjectForFingerPrint() {
+    FingerPrintData fData =
+        new FingerPrintData.Builder("37072f4703346059fbde79b4c8babdcd", 1468821505).build();
+
+    FingerPrintBasedMerchantAuthentication merchantAuthentication =
+        FingerPrintBasedMerchantAuthentication.
+            createMerchantAuthentication(API_LOGIN_ID, fData);
+
+    // create a transaction object by calling the predefined api for creation
+    return TransactionObject.
+        createTransactionObject(
+            TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
+        .cardData(prepareCardDataFromFields()) // card data to be encrypted
+        .merchantAuthentication(merchantAuthentication).build();
+  }
+
+  private EncryptTransactionObject prepareTestTransactionObject() {
+    ClientKeyBasedMerchantAuthentication merchantAuthentication =
+        ClientKeyBasedMerchantAuthentication.
+            createMerchantAuthentication(API_LOGIN_ID, CLIENT_KEY);
+
+    // create a transaction object by calling the predefined api for creation
+    return EncryptTransactionObject.
+        createTransactionObject(
+            TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
+        .cardData(prepareTestCardData()) // card data to be encrypted
+        .merchantAuthentication(merchantAuthentication).build();
+  }
+
+  private CardData prepareTestCardData() {
+    return new CardData.Builder(CARD_NUMBER, EXPIRATION_MONTH, EXPIRATION_YEAR).setCVVCode("")
+        .setZipCode("")
+        .setCardHolderName("")
+        .build();
+  }
+
+/* ---------------------- Callback Methods - Start -----------------------*/
+
+  @Override public void onEncryptionFinished(EncryptTransactionResponse response) {
+    hideSoftKeyboard();
+    if (responseLayout.getVisibility() != View.VISIBLE) responseLayout.setVisibility(View.VISIBLE);
+    if (progressDialog.isShowing()) progressDialog.dismiss();
+    responseTitle.setText(R.string.encrypted_card_data);
+    responseValue.setText(getString(R.string.encrypted_data) + response.getDataValue());
+  }
+
+  @Override public void onErrorReceived(ErrorTransactionResponse errorResponse) {
+    hideSoftKeyboard();
+    if (responseLayout.getVisibility() != View.VISIBLE) responseLayout.setVisibility(View.VISIBLE);
+    if (progressDialog.isShowing()) progressDialog.dismiss();
+    responseTitle.setText(R.string.error);
+    Message error = errorResponse.getFirstErrorMessage();
+    String errorString = getString(R.string.code) + error.getMessageCode() + "\n" +
+        getString(R.string.message) + error.getMessageText();
+
+    responseValue.setText(errorString);
+  }
+
+/* ---------------------- Callback Methods - End -----------------------*/
+
+  public void hideSoftKeyboard() {
+    if (getActivity() != null && getActivity().getCurrentFocus() != null) {
+      InputMethodManager imm =
+          (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.hideSoftInputFromInputMethod(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
   }
 
@@ -153,7 +232,6 @@ public class AcceptCheckoutFragment extends Fragment
     month = monthView.getText().toString();
     year = YEAR_PREFIX + yearView.getText().toString();
     cvv = cvvView.getText().toString();
-
     if (isEmptyField()) {
       checkoutButton.startAnimation(
           AnimationUtils.loadAnimation(getActivity(), R.anim.shake_error));
@@ -261,68 +339,8 @@ public class AcceptCheckoutFragment extends Fragment
     });
   }
 
-  private EncryptTransactionObject prepareTestTransactionObject() throws AcceptSDKException {
-    ClientKeyBasedMerchantAuthentication merchantAuthentication =
-        ClientKeyBasedMerchantAuthentication.
-            createMerchantAuthentication(API_LOGIN_ID, CLIENT_KEY);
-
-    // create a transaction object by calling the predefined api for creation
-    return EncryptTransactionObject.
-        createTransactionObject(
-            TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
-        .cardData(prepareCardDataFromFields()) // card data to be encrypted
-        .merchantAuthentication(merchantAuthentication).build();
-  }
-
-  private CardData prepareTestCardData() throws AcceptInvalidCardException {
-    return new CardData.Builder(CARD_NUMBER, EXPIRATION_MONTH, EXPIRATION_YEAR).build();
-  }
-
-  private CardData prepareCardDataFromFields() throws AcceptInvalidCardException {
-    return new CardData.Builder(cardNumber, month, year).build();
-  }
-
-  /**
-   * prepares a transaction object with dummy data to be used with the Gateway transactions
-   */
-  private EncryptTransactionObject prepareTransactionObject() throws AcceptSDKException {
-    ClientKeyBasedMerchantAuthentication merchantAuthentication =
-        ClientKeyBasedMerchantAuthentication.
-            createMerchantAuthentication(API_LOGIN_ID, CLIENT_KEY);
-
-    // create a transaction object by calling the predefined api for creation
-    return TransactionObject.
-        createTransactionObject(
-            TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
-        .cardData(prepareCardDataFromFields()) // card data to be encrypted
-        .merchantAuthentication(merchantAuthentication).build();
-  }
-
-  public void hideSoftKeyboard() {
-    if (getActivity() != null && getActivity().getCurrentFocus() != null) {
-      InputMethodManager imm =
-          (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-      imm.hideSoftInputFromInputMethod(getActivity().getCurrentFocus().getWindowToken(), 0);
-    }
-  }
-
-  @Override public void onEncryptionFinished(EncryptTransactionResponse response) {
-    hideSoftKeyboard();
-    if (responseLayout.getVisibility() != View.VISIBLE) responseLayout.setVisibility(View.VISIBLE);
-    if (progressDialog.isShowing()) progressDialog.dismiss();
-    responseTitle.setText(R.string.encrypted_card_data);
-    responseValue.setText(getString(R.string.encrypted_data) + response.getDataValue());
-  }
-
-  @Override public void onErrorReceived(ErrorTransactionResponse errorResponse) {
-    hideSoftKeyboard();
-    if (responseLayout.getVisibility() != View.VISIBLE) responseLayout.setVisibility(View.VISIBLE);
-    if (progressDialog.isShowing()) progressDialog.dismiss();
-    responseTitle.setText(R.string.error);
-    Message error = errorResponse.getFirstErrorMessage();
-    String errorString = getString(R.string.code) + error.getMessageCode() + "\n" +
-        getString(R.string.message) + error.getMessageText();
-
-    responseValue.setText(errorString);
+  private CardData prepareCardDataFromFields() {
+    return new CardData.Builder(cardNumber, month, year).setCVVCode(cvv) //CVV Code is optional
+        .build();
   }
 }
