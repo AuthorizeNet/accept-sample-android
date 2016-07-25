@@ -19,8 +19,6 @@ import android.widget.Toast;
 import net.authorize.acceptsdk.AcceptSDKApiClient;
 import net.authorize.acceptsdk.datamodel.common.Message;
 import net.authorize.acceptsdk.datamodel.merchant.ClientKeyBasedMerchantAuthentication;
-import net.authorize.acceptsdk.datamodel.merchant.FingerPrintBasedMerchantAuthentication;
-import net.authorize.acceptsdk.datamodel.merchant.FingerPrintData;
 import net.authorize.acceptsdk.datamodel.transaction.CardData;
 import net.authorize.acceptsdk.datamodel.transaction.EncryptTransactionObject;
 import net.authorize.acceptsdk.datamodel.transaction.TransactionObject;
@@ -149,23 +147,6 @@ public class AcceptCheckoutFragment extends Fragment
     ClientKeyBasedMerchantAuthentication merchantAuthentication =
         ClientKeyBasedMerchantAuthentication.
             createMerchantAuthentication(API_LOGIN_ID, CLIENT_KEY);
-
-    // create a transaction object by calling the predefined api for creation
-    return TransactionObject.
-        createTransactionObject(
-            TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
-        .cardData(prepareCardDataFromFields()) // card data to get Token
-        .merchantAuthentication(merchantAuthentication).build();
-  }
-
-  //TODO: Need to remove this code in production
-  private EncryptTransactionObject prepareTransactionObjectForFingerPrint() {
-    FingerPrintData fData =
-        new FingerPrintData.Builder("37072f4703346059fbde79b4c8babdcd", 1468821505).build();
-
-    FingerPrintBasedMerchantAuthentication merchantAuthentication =
-        FingerPrintBasedMerchantAuthentication.
-            createMerchantAuthentication(API_LOGIN_ID, fData);
 
     // create a transaction object by calling the predefined api for creation
     return TransactionObject.
