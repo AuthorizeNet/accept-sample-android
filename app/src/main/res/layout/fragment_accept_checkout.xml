@@ -14,10 +14,6 @@
       android:gravity="center_horizontal"
       >
 
-    <!--<include android:id="@+id/keyed_card_details"
-        layout="@layout/fragment_keyed_card_details"
-     />-->
-
     <RelativeLayout
         android:id="@+id/card_details_relative_layout"
         android:layout_width="match_parent"
@@ -46,7 +42,7 @@
             android:id="@+id/card_number_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Card Number"
+            android:hint="@string/card_number"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:nextFocusDown="@+id/date_month_view"
@@ -76,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Month"
+            android:hint="@string/month"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:maxLength="2"
@@ -89,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Year"
+            android:hint="@string/year"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:maxLength="2"
@@ -117,10 +113,10 @@
 
         <EditText
             android:id="@+id/security_code_view"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="CVV"
+            android:hint="@string/cvv"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:maxLength="3"
@@ -141,11 +137,11 @@
 
         <Button
             android:id="@+id/button_checkout_order"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/visa_action_golden"
-            android:text="@string/encrypt"
+            android:text="@string/button_text_token"
             android:textColor="@color/white"
             android:textSize="22sp"
             />
@@ -169,7 +165,7 @@
         android:id="@+id/encrypted_data_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Encrypted Data:"
+        android:text="@string/token_data"
         android:textStyle="bold"
         />
 
@@ -188,7 +184,6 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_below="@+id/divider"
-        android:text="jhsagdja shgd jahsgd jhasgjd hasgjd hagsjdhgajsd kjdhfjkhkdjhfksjdhfkjsdhfkjsdhfkjsd"
         />
 
   </RelativeLayout>

@@ -120,15 +120,15 @@ public class AcceptCheckoutFragment extends Fragment
   @Override public void onClick(View v) {
     if (!areFormDetailsValid()) return;
 
-    progressDialog =
-        ProgressDialog.show(getActivity(), "Please Wait", "Encrypting Card Data...", true);
+    progressDialog = ProgressDialog.show(getActivity(), this.getString(R.string.progress_title),
+        this.getString(R.string.progress_message), true);
     if (responseLayout.getVisibility() == View.VISIBLE) responseLayout.setVisibility(View.GONE);
 
     try {
       EncryptTransactionObject transactionObject = prepareTransactionObject();
 
       /*
-        Make a call to encryption to API
+        Make a call to get Token API
         parameters:
           1) EncryptTransactionObject - The transactionObject for the current transaction
           2) callback - callback of transaction
@@ -154,7 +154,7 @@ public class AcceptCheckoutFragment extends Fragment
     return TransactionObject.
         createTransactionObject(
             TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
-        .cardData(prepareCardDataFromFields()) // card data to be encrypted
+        .cardData(prepareCardDataFromFields()) // card data to get Token
         .merchantAuthentication(merchantAuthentication).build();
   }
 
@@ -171,7 +171,7 @@ public class AcceptCheckoutFragment extends Fragment
     return TransactionObject.
         createTransactionObject(
             TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
-        .cardData(prepareCardDataFromFields()) // card data to be encrypted
+        .cardData(prepareCardDataFromFields()) // card data to get Token
         .merchantAuthentication(merchantAuthentication).build();
   }
 
@@ -184,7 +184,7 @@ public class AcceptCheckoutFragment extends Fragment
     return EncryptTransactionObject.
         createTransactionObject(
             TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
-        .cardData(prepareTestCardData()) // card data to be encrypted
+        .cardData(prepareTestCardData()) // card data to prepare token
         .merchantAuthentication(merchantAuthentication).build();
   }
 
@@ -201,8 +201,8 @@ public class AcceptCheckoutFragment extends Fragment
     hideSoftKeyboard();
     if (responseLayout.getVisibility() != View.VISIBLE) responseLayout.setVisibility(View.VISIBLE);
     if (progressDialog.isShowing()) progressDialog.dismiss();
-    responseTitle.setText(R.string.encrypted_card_data);
-    responseValue.setText(getString(R.string.encrypted_data) + response.getDataValue());
+    responseTitle.setText(R.string.token);
+    responseValue.setText(getString(R.string.token_data) + response.getDataValue());
   }
 
   @Override public void onErrorReceived(ErrorTransactionResponse errorResponse) {
