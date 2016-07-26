@@ -143,6 +143,7 @@
             android:background="@color/visa_action_golden"
             android:text="@string/button_text_token"
             android:textColor="@color/white"
+            android:imeOptions="actionDone"
             android:textSize="22sp"
             />
       </LinearLayout>
@@ -165,7 +166,7 @@
         android:id="@+id/encrypted_data_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/token_data"
+        android:text="@string/token"
         android:textStyle="bold"
         />
 
