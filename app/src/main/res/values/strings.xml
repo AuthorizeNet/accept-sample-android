@@ -19,7 +19,8 @@
   <string name="code">"Code: "</string>
   <string name="message">"Message: "</string>
   <string name="extra_message">"Extra Message: "</string>
-  <string name="token_data">"Token Data :  "</string>
+  <string name="data_descriptor">"Data Descriptor :  "</string>
+  <string name="data_value">"Data Value:  "</string>
   <string name="decision">"Decision: "</string>
   <string name="token">"Token"</string>
   <string name="cvv">CVV</string>

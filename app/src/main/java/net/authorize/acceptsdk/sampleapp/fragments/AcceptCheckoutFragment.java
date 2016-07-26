@@ -183,7 +183,9 @@ public class AcceptCheckoutFragment extends Fragment
     if (responseLayout.getVisibility() != View.VISIBLE) responseLayout.setVisibility(View.VISIBLE);
     if (progressDialog.isShowing()) progressDialog.dismiss();
     responseTitle.setText(R.string.token);
-    responseValue.setText(getString(R.string.token_data) + response.getDataValue());
+    responseValue.setText(
+        getString(R.string.data_descriptor) + response.getDataDescriptor() + "\n" + getString(
+            R.string.data_value) + response.getDataValue());
   }
 
   @Override public void onErrorReceived(ErrorTransactionResponse errorResponse) {
@@ -201,24 +203,28 @@ public class AcceptCheckoutFragment extends Fragment
 /* ---------------------- Callback Methods - End -----------------------*/
 
   public void hideSoftKeyboard() {
+    InputMethodManager keyboard =
+        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     if (getActivity() != null && getActivity().getCurrentFocus() != null) {
-      InputMethodManager imm =
-          (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-      imm.hideSoftInputFromInputMethod(getActivity().getCurrentFocus().getWindowToken(), 0);
+      keyboard.hideSoftInputFromInputMethod(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
   }
 
   private boolean areFormDetailsValid() {
     cardNumber = cardNumberView.getText().toString().replace(" ", "");
     month = monthView.getText().toString();
-    year = YEAR_PREFIX + yearView.getText().toString();
     cvv = cvvView.getText().toString();
+    year = yearView.getText().toString();
+
     if (isEmptyField()) {
       checkoutButton.startAnimation(
           AnimationUtils.loadAnimation(getActivity(), R.anim.shake_error));
       Toast.makeText(getActivity(), "Empty fields", Toast.LENGTH_LONG).show();
       return false;
     }
+
+    year = YEAR_PREFIX + yearView.getText().toString();
+
     return validateFields();
   }
 
