@@ -7,7 +7,7 @@
   <string name="hello_blank_fragment">Hello blank fragment</string>
 
   <string name="web_checkout">Web Checkout</string>
-  <string name="encrypt">Encrypt</string>
+  <string name="button_text_token">FETCH TOKEN</string>
 
   <string name="invalid_card_number">Invalid Card Number</string>
   <string name="invalid_month">Invalid Month</string>
@@ -19,7 +19,13 @@
   <string name="code">"Code: "</string>
   <string name="message">"Message: "</string>
   <string name="extra_message">"Extra Message: "</string>
-  <string name="encrypted_card_data">Encrypted Card Data</string>
+  <string name="token_data">"Token Data :  "</string>
   <string name="decision">"Decision: "</string>
-  <string name="encrypted_data">"Encrypted Data: "</string>
+  <string name="token">"Token"</string>
+  <string name="cvv">CVV</string>
+  <string name="card_number">Card Number</string>
+  <string name="month">Month</string>
+  <string name="year">Year</string>
+  <string name="progress_message">Fetching Token for given Card Data...</string>
+  <string name="progress_title">Please Wait</string>
 </resources>

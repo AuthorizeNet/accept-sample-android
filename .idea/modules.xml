@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/accept-sample-android.iml" filepath="$PROJECT_DIR$/accept-sample-android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../accept-sdk-android/accept-sdk-android.iml" filepath="$PROJECT_DIR$/../accept-sdk-android/accept-sdk-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

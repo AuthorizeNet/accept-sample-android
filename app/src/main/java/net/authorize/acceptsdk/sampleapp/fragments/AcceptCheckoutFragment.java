@@ -19,8 +19,6 @@ import android.widget.Toast;
 import net.authorize.acceptsdk.AcceptSDKApiClient;
 import net.authorize.acceptsdk.datamodel.common.Message;
 import net.authorize.acceptsdk.datamodel.merchant.ClientKeyBasedMerchantAuthentication;
-import net.authorize.acceptsdk.datamodel.merchant.FingerPrintBasedMerchantAuthentication;
-import net.authorize.acceptsdk.datamodel.merchant.FingerPrintData;
 import net.authorize.acceptsdk.datamodel.transaction.CardData;
 import net.authorize.acceptsdk.datamodel.transaction.EncryptTransactionObject;
 import net.authorize.acceptsdk.datamodel.transaction.TransactionObject;
@@ -120,15 +118,15 @@ public class AcceptCheckoutFragment extends Fragment
   @Override public void onClick(View v) {
     if (!areFormDetailsValid()) return;
 
-    progressDialog =
-        ProgressDialog.show(getActivity(), "Please Wait", "Encrypting Card Data...", true);
+    progressDialog = ProgressDialog.show(getActivity(), this.getString(R.string.progress_title),
+        this.getString(R.string.progress_message), true);
     if (responseLayout.getVisibility() == View.VISIBLE) responseLayout.setVisibility(View.GONE);
 
     try {
       EncryptTransactionObject transactionObject = prepareTransactionObject();
 
       /*
-        Make a call to encryption to API
+        Make a call to get Token API
         parameters:
           1) EncryptTransactionObject - The transactionObject for the current transaction
           2) callback - callback of transaction
@@ -154,24 +152,7 @@ public class AcceptCheckoutFragment extends Fragment
     return TransactionObject.
         createTransactionObject(
             TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
-        .cardData(prepareCardDataFromFields()) // card data to be encrypted
-        .merchantAuthentication(merchantAuthentication).build();
-  }
-
-  //TODO: Need to remove this code in production
-  private EncryptTransactionObject prepareTransactionObjectForFingerPrint() {
-    FingerPrintData fData =
-        new FingerPrintData.Builder("37072f4703346059fbde79b4c8babdcd", 1468821505).build();
-
-    FingerPrintBasedMerchantAuthentication merchantAuthentication =
-        FingerPrintBasedMerchantAuthentication.
-            createMerchantAuthentication(API_LOGIN_ID, fData);
-
-    // create a transaction object by calling the predefined api for creation
-    return TransactionObject.
-        createTransactionObject(
-            TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
-        .cardData(prepareCardDataFromFields()) // card data to be encrypted
+        .cardData(prepareCardDataFromFields()) // card data to get Token
         .merchantAuthentication(merchantAuthentication).build();
   }
 
@@ -184,7 +165,7 @@ public class AcceptCheckoutFragment extends Fragment
     return EncryptTransactionObject.
         createTransactionObject(
             TransactionType.SDK_TRANSACTION_ENCRYPTION) // type of transaction object
-        .cardData(prepareTestCardData()) // card data to be encrypted
+        .cardData(prepareTestCardData()) // card data to prepare token
         .merchantAuthentication(merchantAuthentication).build();
   }
 
@@ -201,8 +182,8 @@ public class AcceptCheckoutFragment extends Fragment
     hideSoftKeyboard();
     if (responseLayout.getVisibility() != View.VISIBLE) responseLayout.setVisibility(View.VISIBLE);
     if (progressDialog.isShowing()) progressDialog.dismiss();
-    responseTitle.setText(R.string.encrypted_card_data);
-    responseValue.setText(getString(R.string.encrypted_data) + response.getDataValue());
+    responseTitle.setText(R.string.token);
+    responseValue.setText(getString(R.string.token_data) + response.getDataValue());
   }
 
   @Override public void onErrorReceived(ErrorTransactionResponse errorResponse) {
