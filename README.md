@@ -6,7 +6,7 @@ This project demonstrates the usage of the [Authorize.Net Accept Mobile SDK for 
 
 Clone this repository
 ````
-git clone https://github.com/CyberSource/cybersource-android-samples
+git clone https://github.com/AuthorizeNet/accept-sample-android.git
 ````
 
 Open the project in Android Studio and Run.
