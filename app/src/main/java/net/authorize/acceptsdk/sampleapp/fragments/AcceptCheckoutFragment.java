@@ -84,7 +84,7 @@ public class AcceptCheckoutFragment extends Fragment
 
     try {
       apiClient = new AcceptSDKApiClient.Builder(getActivity(),
-          AcceptSDKApiClient.Environment.SANDBOX).setConnectionTimeout(
+          AcceptSDKApiClient.Environment.SANDBOX).connectionTimeout(
           4000) // optional connection time out in milliseconds
           .build();
     } catch (NullPointerException e) {
@@ -170,9 +170,9 @@ public class AcceptCheckoutFragment extends Fragment
   }
 
   private CardData prepareTestCardData() {
-    return new CardData.Builder(CARD_NUMBER, EXPIRATION_MONTH, EXPIRATION_YEAR).setCVVCode("")
-        .setZipCode("")
-        .setCardHolderName("")
+    return new CardData.Builder(CARD_NUMBER, EXPIRATION_MONTH, EXPIRATION_YEAR).cvvCode("")
+        .zipCode("")
+        .cardHolderName("")
         .build();
   }
 
@@ -327,7 +327,7 @@ public class AcceptCheckoutFragment extends Fragment
   }
 
   private CardData prepareCardDataFromFields() {
-    return new CardData.Builder(cardNumber, month, year).setCVVCode(cvv) //CVV Code is optional
+    return new CardData.Builder(cardNumber, month, year).cvvCode(cvv) //CVV Code is optional
         .build();
   }
 }
