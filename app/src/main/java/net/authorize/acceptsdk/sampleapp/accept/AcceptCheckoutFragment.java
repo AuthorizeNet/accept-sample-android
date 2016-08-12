@@ -1,4 +1,4 @@
-package net.authorize.acceptsdk.sampleapp.fragments;
+package net.authorize.acceptsdk.sampleapp.accept;
 
 import android.app.ProgressDialog;
 import android.content.Context;
