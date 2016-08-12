@@ -33,7 +33,7 @@ import java.security.PublicKey;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-import net.authorize.acceptsdk.sampleapp.accept.AcceptCheckoutFragment;
+import net.authorize.acceptsdk.sampleapp.accept.AcceptFragment;
 import net.authorize.acceptsdk.sampleapp.androidpay.BaseActivity;
 import net.authorize.acceptsdk.sampleapp.androidpay.MposTransaction;
 import net.authorize.acceptsdk.sampleapp.androidpay.WalletUtil;
@@ -63,7 +63,7 @@ public class CheckoutActivity extends BaseActivity
 
   private TextView itemNameView;
   private TextView itemPriceView;
-  private FrameLayout walletButtonFragmentLayout, checkoutFragmentLayout;
+  private FrameLayout walletButtonFragmentLayout;
   private LinearLayout notReadyLayout;
   private Button checkoutButton;
 
@@ -93,26 +93,23 @@ public class CheckoutActivity extends BaseActivity
     itemPriceView.setText("$" + MposTransaction.getInstance().getItemInfo().getTotalPrice());
 
     walletButtonFragmentLayout = (FrameLayout) findViewById(R.id.dynamic_wallet_button_fragment);
-    checkoutFragmentLayout = (FrameLayout) findViewById(R.id.accept_checkout_fragment_container);
     notReadyLayout = (LinearLayout) findViewById(R.id.not_ready_to_pay);
     checkoutButton = (Button) findViewById(R.id.button_regular_checkout);
     checkoutButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-        pullWebCheckoutFragment();
+        launchAcceptFragment();
       }
     });
   }
 
-  private void pullWebCheckoutFragment() {
+  private void launchAcceptFragment() {
     FragmentManager fragmentManager = getSupportFragmentManager();
-    AcceptCheckoutFragment checkoutFragment =
-        (AcceptCheckoutFragment) fragmentManager.findFragmentByTag(TAG_FRAGMENT_CHECKOUT);
+    AcceptFragment checkoutFragment =
+        (AcceptFragment) fragmentManager.findFragmentByTag(TAG_FRAGMENT_CHECKOUT);
     if (checkoutFragment == null) {
-      checkoutFragmentLayout.setVisibility(View.VISIBLE);
-
-      checkoutFragment = new AcceptCheckoutFragment();
+      checkoutFragment = new AcceptFragment();
       fragmentManager.beginTransaction()
-          .replace(R.id.accept_checkout_fragment_container, checkoutFragment, TAG_FRAGMENT_CHECKOUT)
+          .replace(R.id.layout_container, checkoutFragment, TAG_FRAGMENT_CHECKOUT)
           .commit();
     }
   }

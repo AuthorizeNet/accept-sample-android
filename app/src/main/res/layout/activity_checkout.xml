@@ -18,116 +18,133 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true" >
+    >
+
+  <FrameLayout
+      android:id="@+id/layout_container"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+
+      <LinearLayout
+          android:id="@+id/checkout_cart_detail_fragment"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:padding="@dimen/padding_large"
+          >
 
         <LinearLayout
-            android:id="@+id/checkout_cart_detail_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/padding_large">
+            android:orientation="horizontal"
+            >
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginRight="@dimen/margin_small"
+              android:text="@string/item_name"
+              />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/item_name"
-                    android:layout_marginRight="@dimen/margin_small"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/item_name_checkout"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/item_price"
-                    android:layout_marginRight="@dimen/margin_small"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/item_price_checkout"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
+          <TextView
+              android:id="@+id/item_name_checkout"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="16sp"
+              android:textStyle="bold"
+              />
         </LinearLayout>
 
-        <include layout="@layout/horizontal_divider" />
-
-        <!--
-            This FrameLayout is a placeholder for the Pay with Google button and will be provided
-            by a fragment at runtime.
-        -->
-        <FrameLayout
-            android:id="@+id/dynamic_wallet_button_fragment"
-            android:layout_height="@dimen/buy_button_height"
-            android:layout_width="@dimen/buy_button_width"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/margin_xlarge"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:visibility="gone"/>
-
-        <FrameLayout
-            android:id="@+id/accept_checkout_fragment_container"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:visibility="gone"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/not_ready_to_pay"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/margin_xlarge"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:padding="10dp"
-            android:visibility="gone">
+            android:orientation="horizontal"
+            >
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginRight="@dimen/margin_small"
+              android:text="@string/item_price"
+              />
+
+          <TextView
+              android:id="@+id/item_price_checkout"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="16sp"
+              android:textStyle="bold"
+              />
+        </LinearLayout>
+      </LinearLayout>
+
+      <include layout="@layout/horizontal_divider"/>
+
+      <!--
+          This FrameLayout is a placeholder for the Pay with Google button and will be provided
+          by a fragment at runtime.
+      -->
+      <FrameLayout
+          android:id="@+id/dynamic_wallet_button_fragment"
+          android:layout_width="@dimen/buy_button_width"
+          android:layout_height="@dimen/buy_button_height"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginBottom="@dimen/margin_large"
+          android:layout_marginTop="@dimen/margin_xlarge"
+          android:visibility="gone"
+          />
+
+
+      <LinearLayout
+          android:id="@+id/not_ready_to_pay"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/margin_large"
+          android:layout_marginTop="@dimen/margin_xlarge"
+          android:orientation="vertical"
+          android:padding="10dp"
+          android:visibility="gone"
+          >
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
             android:text="@string/pay_not_ready"
-            android:textSize="22sp"/>
+            android:textSize="22sp"
+            />
 
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
             android:text="@string/set_it_up"
             android:textSize="12sp"
-            android:textStyle="italic"/>
-        </LinearLayout>
+            android:textStyle="italic"
+            />
+      </LinearLayout>
 
-        <Button
-            android:id="@+id/button_regular_checkout"
-            android:layout_width="@dimen/buy_button_width"
-            android:layout_height="wrap_content"
-            android:text="Continue Checkout"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/padding_large" />
+      <Button
+          android:id="@+id/button_regular_checkout"
+          android:layout_width="@dimen/buy_button_width"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginBottom="@dimen/padding_large"
+          android:text="Continue Checkout"
+          />
 
     </LinearLayout>
+  </FrameLayout>
 
 </ScrollView>
