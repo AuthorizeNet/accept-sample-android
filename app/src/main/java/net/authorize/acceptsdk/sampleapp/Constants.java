@@ -27,14 +27,14 @@ public class Constants {
     public static String API_LOGIN_ID = "android_pay_sample_login_id"; // replace with YOUR_API_LOGIN_ID
 
     // Public SEC key
-    public static final String PUBLIC_KEY_SEC = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEGswOubUOZchQkOJPt41PMduC4Ma5ldBTIhZUMINvuTuQOrWIl3GhLDEl/75hFoWRkp+d+KBism9+1LBBa2gBnw==";
-    //public static final String PUBLIC_KEY_SEC = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEmCjUGTbI2HIjY7frBPpF11b9Tat7GfnKYytvZdmsUAgqTaA5pfQG8h6dQRh+SpZcgu79uU5dRkYy6Ogz9Vb1jw==";
+   // public static final String PUBLIC_KEY_SEC = "BJl81FGW5WaSkoVgP0Hy5IPHgL3a94glHmInRJtLN5Vz/v219G9Bq2HXqSwumu+OD5hxDNnaMLDrlyTu9fvJ6eA=";
+    public static final String PUBLIC_KEY_SEC = "BO39Rh43UGXMQy5PAWWe7UGWd2a9YRjNLPEEVe+zWIbdIgALcDcnYCuHbmrrzl7h8FZjl6RCzoi5/cDrqXNRVSo=";
 
-    // Environment to use when creating an instance of Wallet.WalletOptions
+  // Environment to use when creating an instance of Wallet.WalletOptions
     public static final int WALLET_ENVIRONMENT = WalletConstants.ENVIRONMENT_SANDBOX;
 
     public static final String MERCHANT_NAME = "AndroidPay Sample Merchant";
-
+  //283544558756-ra35r7odv4eftmlrbgt8s3c3298mb5ol.apps.googleusercontent.com - client id
     // Intent extra keys
     public static final String EXTRA_ITEM_ID = "EXTRA_ITEM_ID";
     public static final String EXTRA_MASKED_WALLET = "EXTRA_MASKED_WALLET";
