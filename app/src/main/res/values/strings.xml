@@ -6,9 +6,8 @@
   <string name="action_settings">Settings</string>
   <string name="hello_blank_fragment">Hello blank fragment</string>
 
-  <string name="web_checkout">Web Checkout</string>
+  <!-- Accept Related  -->
   <string name="button_text_token">FETCH TOKEN</string>
-
   <string name="invalid_card_number">Invalid Card Number</string>
   <string name="invalid_month">Invalid Month</string>
   <string name="two_digit_month">Two Digit Month Required</string>
@@ -31,40 +30,35 @@
   <string name="progress_title">Please Wait</string>
 
 
-    <!-- Android Pay specific -->
- <string name="pay_with_google_button">Android Pay</string>
-    <string name="enter_amount">Enter Amount:</string>
-    <string name="title_activity_checkout">Checkout</string>
-    <string name="itemName">Item One</string>
-    <string name="title_activity_base">BaseActivity</string>
+  <!-- Android Pay specific -->
+  <string name="pay_with_google_button">Android Pay</string>
+  <string name="enter_amount">Enter Amount:</string>
+  <string name="title_activity_checkout">Checkout</string>
+  <string name="itemName">Item One</string>
+  <string name="title_activity_base">BaseActivity</string>
 
 
-    <string name="google_wallet_unavailable">Google Wallet is unavailable</string>
-    <string name="google_wallet_invalid_parameters">Invalid Parameters</string>
-    <string name="google_wallet_merchant_account_error">Merchant Account Error</string>
-    <string name="error_code">Error code: %d</string>
-    <string name="spending_limit_exceeded">You have exceeded your spending limit</string>
-    <string name="title_activity_confirmation">Confirmation</string>
-    <string name="title_activity_order_complete">Order Complete </string>
-    <string name="confirm_order">Confirm</string>
-    <string name="loading">Loading...</string>
-    <string name="gateway_cybersource">cybersource</string>
-    <string name="gateway">gateway</string>
+  <string name="google_wallet_unavailable">Google Wallet is unavailable</string>
+  <string name="google_wallet_invalid_parameters">Invalid Parameters</string>
+  <string name="google_wallet_merchant_account_error">Merchant Account Error</string>
+  <string name="error_code">Error code: %d</string>
+  <string name="spending_limit_exceeded">You have exceeded your spending limit</string>
+  <string name="title_activity_confirmation">Confirmation</string>
+  <string name="title_activity_order_complete">Order Complete </string>
+  <string name="confirm_order">Confirm</string>
+  <string name="loading">Loading...</string>
+  <string name="gateway">gateway</string>
 
-    <string name="thanks_for_your_order">Transaction complete. Thank you</string>
-    <string name="confirmation_details">Confirmation details</string>
-    <string name="secured_by">Your transaction is Secured by</string>
-    <string name="confirmation_text">Your order confirmation number is ABC123.\n\nYour purchase will be shipped within two business days.</string>
-    <string name="credit_card_title">Credit Card</string>
-    <string name="return_to_shopping">Return to shopping</string>
-    <string name="pay_not_ready">Android Pay Not Ready</string>
-    <string name="set_it_up">Set it up using the Android Pay app, and you�ll be all set to pay with CyberSource.</string>
-    <string name="item_price">Item price:</string>
-    <string name="item_name">Item name:</string>
-
-
-
-
+  <string name="thanks_for_your_order">Transaction complete. Thank you</string>
+  <string name="confirmation_details">Confirmation details</string>
+  <string name="secured_by">Your transaction is Secured by</string>
+  <string name="confirmation_text">Your order confirmation number is ABC123.\n\nYour purchase will be shipped within two business days.</string>
+  <string name="credit_card_title">Credit Card</string>
+  <string name="return_to_shopping">Return to shopping</string>
+  <string name="pay_not_ready">Android Pay Not Ready</string>
+  <string name="set_it_up">Set it up using the Android Pay app, and you�ll be all set to pay with Authorize.net.</string>
+  <string name="item_price">Item price:</string>
+  <string name="item_name">Item name:</string>
 
 
 </resources>
