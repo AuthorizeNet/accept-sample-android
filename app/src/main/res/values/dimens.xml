@@ -2,7 +2,7 @@
   <!-- Default screen margins, per the Android Design guidelines. -->
   <dimen name="activity_horizontal_margin">16dp</dimen>
   <dimen name="activity_vertical_margin">16dp</dimen>
-
+  <dimen name="font_smaller">16sp</dimen>
 
   <dimen name="padding_tiny">2dp</dimen>
   <dimen name="padding_small">5dp</dimen>
@@ -15,4 +15,20 @@
   <dimen name="checkout_button_width">300dp</dimen>
   <dimen name="element_space">15dp</dimen>
   <dimen name="separator_width">1dp</dimen>
+  <dimen name="buy_button_width">300dp</dimen>
+  <dimen name="promo_size">160dp</dimen>
+  <dimen name="promo_title">18sp</dimen>
+  <dimen name="promo_line_spacing">2dp</dimen>
+  <dimen name="promo_item_label">24sp</dimen>
+  <dimen name="promo_item_width">200dp</dimen>
+
+  <dimen name="image_thumbnail_size">72dp</dimen>
+  <dimen name="buy_button_height">48dp</dimen>
+  <dimen name="buy_button_min_width">200dp</dimen>
+
+  <dimen name="bikestore_button_min_width">48dp</dimen>
+  <dimen name="bikestore_button_max_width">64dp</dimen>
+  <dimen name="bikestore_button_text">18sp</dimen>
+
+
 </resources>

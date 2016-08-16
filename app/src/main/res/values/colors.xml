@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="colorPrimary">#3F51B5</color>
-  <color name="colorPrimaryDark">#303F9F</color>
-  <color name="colorAccent">#FF4081</color>
+  <color name="colorPrimary">#4CAF50</color>
+  <color name="colorPrimaryDark">#388E3C</color>
+  <color name="colorPrimaryLight">#C8E6C9</color>
+  <color name="colorAccent">#8BC34A</color>
 
 
   <color name="google_green">#FF0F9D58</color>
@@ -23,4 +24,10 @@
   <color name="visa_action_golden">#F9A714</color>
 
   <color name="background_light_blue">#467FCF</color>
+  <color name="separator">#FF909090</color>
+  <color name="promo_background">#B1B7C1</color>
+  <color name="promo_item_label_color">#BBBBBB</color>
+  <color name="promo_item_label_background">#99444444</color>
+  <color name="wallet_details_color">#000000</color>
+  <color name="wallet_dark_grey">#666666</color>
 </resources>

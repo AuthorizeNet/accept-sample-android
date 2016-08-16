@@ -17,6 +17,17 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+    <activity
+        android:name=".CheckoutActivity"
+        android:label="@string/title_activity_checkout" >
+    </activity>
+    <activity
+        android:name=".androidpay.BaseActivity"
+        android:label="@string/title_activity_base" >
+    </activity>
+    <meta-data
+        android:name="com.google.android.gms.wallet.api.enabled"
+        android:value="true" />
   </application>
 
 </manifest>
