@@ -31,7 +31,7 @@ public class Constants {
     public static final String PUBLIC_KEY_SEC = "BO39Rh43UGXMQy5PAWWe7UGWd2a9YRjNLPEEVe+zWIbdIgALcDcnYCuHbmrrzl7h8FZjl6RCzoi5/cDrqXNRVSo=";
 
   // Environment to use when creating an instance of Wallet.WalletOptions
-    public static final int WALLET_ENVIRONMENT = WalletConstants.ENVIRONMENT_SANDBOX;
+    public static final int WALLET_ENVIRONMENT = WalletConstants.ENVIRONMENT_TEST;
 
     public static final String MERCHANT_NAME = "AndroidPay Sample Merchant";
   //283544558756-ra35r7odv4eftmlrbgt8s3c3298mb5ol.apps.googleusercontent.com - client id
