@@ -396,40 +396,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     if (mProgressDialog.isShowing()) {
       mProgressDialog.dismiss();
     }
-
     moveToSuccessActivity(fullWallet);
-
-    // Get payment method token, if it exists
-/*        PaymentMethodToken paymentMethodToken = fullWallet.getPaymentMethodToken();
-        if (paymentMethodToken != null) {
-            String tokenJSON = paymentMethodToken.getToken();
-            if (tokenJSON != null) {
-                // getToken returns a JSON object as a String.  Replace newlines to make LogCat output
-                // nicer.  The 'id' field of the object contains the Stripe token we are interested in.
-                Log.d(TAG, "Token:" + tokenJSON.replace('\n', ' '));
-                // FOR STRIPE - send stripeToken to the server
-*//*                com.stripe.model.Token stripeToken = com.stripe.model.Token.GSON.fromJson(tokenJSON, com.stripe.model.Token.class);
-
-                // TODO: replace this string with your Stripe secret key
-                Stripe.apiKey = "replace_me_with_stripe_secret_key";
-
-                Map<String, Object> chargeParams = new HashMap<>();
-                chargeParams.put("amount", MposTransaction.getInstance().getItemInfo().getTotalPrice());
-                chargeParams.put("currency", "usd");
-                //chargeParams.put("source", stripeToken.getId());
-                chargeParams.put("description", "This is my new description");
-                StripeChargeTask stripeChargeTask = new StripeChargeTask(fullWallet);
-                stripeChargeTask.execute(chargeParams);
-                *//*
-                String blob = getBase64Blob(tokenJSON);
-                Log.d("AndroidPay Blob:" , blob);
-
-                String secBlob = createSecServiceBlob(blob);
-                secBlob = getBase64Blob(secBlob);
-                Log.d("Final Sec Blob:" , secBlob);
-            }
-            return;
-        }*/
   }
 
   /**
@@ -468,14 +435,14 @@ public class FullWalletConfirmationButtonFragment extends Fragment
   // The following code assumes a successful response and calls notifyTransactionStatus and then moves on to the success screen
   private void moveToSuccessActivity(FullWallet fullWallet) {
     //FIXME: Need to check is it needed or not
-    //Wallet.Payments.notifyTransactionStatus(mGoogleApiClient,
-    //        WalletUtil.createNotifyTransactionStatusRequest(fullWallet.getGoogleTransactionId(),
-    //                NotifyTransactionStatusRequest.Status.SUCCESS));
+    Wallet.Payments.notifyTransactionStatus(mGoogleApiClient,
+            WalletUtil.createNotifyTransactionStatusRequest(fullWallet.getGoogleTransactionId(),
+                    NotifyTransactionStatusRequest.Status.SUCCESS));
 
-    //Intent intent = new Intent(getActivity(), OrderCompleteActivity.class);
-    //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-    //intent.putExtra(Constants.EXTRA_FULL_WALLET, fullWallet);
-    //startActivity(intent);
+    Intent intent = new Intent(getActivity(), OrderCompleteActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+    intent.putExtra(Constants.EXTRA_FULL_WALLET, fullWallet);
+    startActivity(intent);
   }
 
   private static class RetryHandler extends Handler {
@@ -495,49 +462,6 @@ public class FullWalletConfirmationButtonFragment extends Fragment
           }
           break;
       }
-    }
-  }
-
-  class StripeChargeTask extends AsyncTask<Map<String, Object>, Void, Boolean> {
-
-    private FullWallet fullWallet;
-
-    public StripeChargeTask(FullWallet fullWallet) {
-      this.fullWallet = fullWallet;
-    }
-
-    protected Boolean doInBackground(Map<String, Object>... chargeParams) {
-/*            try {
-                Charge.create(chargeParams[0]);
-            } catch (AuthenticationException e) {
-                e.printStackTrace();
-                return false;
-            } catch (InvalidRequestException e) {
-                e.printStackTrace();
-                return false;
-            } catch (APIConnectionException e) {
-                e.printStackTrace();
-                return false;
-            } catch (CardException e) {
-                e.printStackTrace();
-                return false;
-            } catch (APIException e) {
-                e.printStackTrace();
-                return false;
-            }*/
-      return true;
-    }
-
-    protected void onPostExecute(Boolean success) {
-      // NOTE: Send details such as fullWallet.getProxyCard() or fullWallet.getBillingAddress()
-      // to your server and get back success or failure. If you used Stripe for processing,
-      // you can get the token from fullWallet.getPaymentMethodToken()
-      // The following code assumes a successful response and calls notifyTransactionStatus
-      Wallet.Payments.notifyTransactionStatus(mGoogleApiClient,
-          WalletUtil.createNotifyTransactionStatusRequest(fullWallet.getGoogleTransactionId(),
-              NotifyTransactionStatusRequest.Status.SUCCESS));
-
-      moveToSuccessActivity(fullWallet);
     }
   }
 }

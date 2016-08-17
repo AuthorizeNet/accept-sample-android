@@ -10,24 +10,33 @@
       android:theme="@style/AppTheme">
     <activity
         android:name=".MainActivity"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"/>
+    <activity
+        android:name=".CheckoutActivity"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout"
-        >
+        android:label="@string/title_activity_checkout">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
     <activity
-        android:name=".CheckoutActivity"
-        android:label="@string/title_activity_checkout" >
+        android:name=".androidpay.BaseActivity"
+        android:label="@string/title_activity_base">
+    </activity>
+
+    <activity
+        android:name=".androidpay.ConfirmationActivity"
+        android:label="@string/title_activity_confirmation">
     </activity>
     <activity
-        android:name=".androidpay.BaseActivity"
-        android:label="@string/title_activity_base" >
+        android:name=".androidpay.OrderCompleteActivity"
+        android:label="@string/title_activity_confirmation">
     </activity>
+
     <meta-data
         android:name="com.google.android.gms.wallet.api.enabled"
-        android:value="true" />
+        android:value="true"/>
   </application>
 
 </manifest>
