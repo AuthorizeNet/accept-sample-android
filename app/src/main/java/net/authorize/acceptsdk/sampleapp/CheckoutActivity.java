@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
@@ -35,29 +36,21 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import net.authorize.acceptsdk.sampleapp.accept.AcceptFragment;
 import net.authorize.acceptsdk.sampleapp.androidpay.BaseActivity;
+import net.authorize.acceptsdk.sampleapp.androidpay.ConfirmationActivity;
+import net.authorize.acceptsdk.sampleapp.androidpay.ItemInfo;
 import net.authorize.acceptsdk.sampleapp.androidpay.MposTransaction;
 import net.authorize.acceptsdk.sampleapp.androidpay.WalletUtil;
 import org.spongycastle.jce.interfaces.ECPublicKey;
 import org.spongycastle.math.ec.ECPoint;
 import org.spongycastle.util.encoders.Base64;
 
-//import org.apache.commons.codec.binary.Base64;
-
 public class CheckoutActivity extends BaseActivity
     implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
   private static final String TAG_FRAGMENT_CHECKOUT = "TAG_FRAGMENT_CHECKOUT";
-
   private static final String TAG = "CheckoutActivity";
-
-  // TODO: replace this string with your Stripe Publishable key
-  public static final String PUBLISHABLE_KEY_STRIPE = "pk_test_3pbo0MsOST3FEBb7ORBQwzc0";
-  // Faizan: My personal Publishable Stripe key
-
-  //public static final String STRIPE_VERSION = com.stripe.Stripe.VERSION;
-  public static final String GATEWAY_STRIPE = "stripe";
   private static final int REQUEST_CODE_MASKED_WALLET = 1001;
-  private PaymentMethodTokenizationParameters mPaymentMethodParameters;
 
+  private PaymentMethodTokenizationParameters mPaymentMethodParameters;
   protected GoogleApiClient mGoogleApiClient;
   private SupportWalletFragment mWalletFragment;
 
@@ -67,14 +60,23 @@ public class CheckoutActivity extends BaseActivity
   private LinearLayout notReadyLayout;
   private Button checkoutButton;
 
+  private RelativeLayout responseLayout;
+  private TextView responseTitle;
+  private TextView responseValue;
+
+  //COMMENT: Sample Transaction Item.
+  static {
+    MposTransaction.getInstance()
+        .setItemInfo(new ItemInfo("Simple item", "Features", 100.00, 0, Constants.CURRENCY_CODE_USD,
+            "seller data 0", 0));
+  }
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_checkout);
     setupViews();
-    //createStripePaymentMethodParameters();
     createNetworkTokenPaymentMethodParameters();
 
-    String accountName = Constants.API_LOGIN_ID;
     // Set up an API client to make 'isReadyToPay' check
     mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
         .addOnConnectionFailedListener(this)
@@ -86,6 +88,10 @@ public class CheckoutActivity extends BaseActivity
   }
 
   private void setupViews() {
+    responseLayout = (RelativeLayout) findViewById(R.id.response_layout);
+    responseTitle = (TextView) findViewById(R.id.encrypted_data_title);
+    responseValue = (TextView) findViewById(R.id.encrypted_data_view);
+
     itemNameView = (TextView) findViewById(R.id.item_name_checkout);
     itemPriceView = (TextView) findViewById(R.id.item_price_checkout);
 
@@ -100,6 +106,10 @@ public class CheckoutActivity extends BaseActivity
         launchAcceptFragment();
       }
     });
+  }
+
+  private void updateResponseLayout(boolean visible) {
+    responseLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
   }
 
   private void launchAcceptFragment() {
@@ -254,24 +264,10 @@ public class CheckoutActivity extends BaseActivity
     }
   }
 
-  public void createStripePaymentMethodParameters() {
-    mPaymentMethodParameters = PaymentMethodTokenizationParameters.newBuilder()
-        .setPaymentMethodTokenizationType(PaymentMethodTokenizationType.PAYMENT_GATEWAY)
-        .addParameter(getString(R.string.gateway), GATEWAY_STRIPE)
-        .addParameter("stripe:publishableKey", PUBLISHABLE_KEY_STRIPE)
-        //.addParameter("stripe:version", STRIPE_VERSION)
-        .build();
-  }
-
   private void createNetworkTokenPaymentMethodParameters() {
     mPaymentMethodParameters = PaymentMethodTokenizationParameters.newBuilder()
         .setPaymentMethodTokenizationType(PaymentMethodTokenizationType.NETWORK_TOKEN)
         .addParameter("publicKey", Constants.PUBLIC_KEY_SEC)
-
-        //  .addParameter("publicKey", "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEGswOubUOZchQkOJPt41PMduC4Ma5ldBTIhZUMINvuTuQOrWIl3GhLDEl/75hFoWRkp+d+KBism9+1LBBa2gBnw==") // "[BASE 64 encoded publicKey]" - public encryption key
-        //  .addParameter("publicKey", "BOdoXP+9Aq473SnGwg3JU1aiNpsd9vH2ognq4PtDtlLGa3Kj8TPf+jaQNPyDSkh3JUhiS0KyrrlWhAgNZKHYF2Y=") // "[BASE 64 encoded publicKey from Google]" - public encryption key
-        //.addParameter("publicKey", "BJgo1Bk2yNhyI2O36wT6RddW/U2rexn5ymMrb2XZrFAIKk2gOaX0BvIenUEYfkqWXILu/blOXUZGMujoM/VW9Y8=") // "[BASE 64 encoded publicKey from Yinghao]" - public encryption key
-        //.addParameter("publicKey", "BBrMDrm1DmXIUJDiT7eNTzHbguDGuZXQUyIWVDCDb7k7kDq1iJdxoSwxJf++YRaFkZKfnfigYrJvftSwQWtoAZ8=") // "[BASE 64 encoded publicKey from Chuong]" - public encryption key
         // .addParameter("publicKey", convertPublicKeyToPointEncoded()) //  Public key point
         .build();
   }
@@ -301,10 +297,9 @@ public class CheckoutActivity extends BaseActivity
   }
 
   private void launchConfirmationPage(MaskedWallet maskedWallet) {
-    //FIXME : Need to check is it needed or not
-    //Intent intent = new Intent(this, ConfirmationActivity.class);
-    //intent.putExtra(Constants.EXTRA_MASKED_WALLET, maskedWallet);
-    //startActivity(intent);
+    Intent intent = new Intent(this, ConfirmationActivity.class);
+    intent.putExtra(Constants.EXTRA_MASKED_WALLET, maskedWallet);
+    startActivity(intent);
   }
 
   @Override protected Fragment getResultTargetFragment() {

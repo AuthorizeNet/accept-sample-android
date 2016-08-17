@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/response_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:background="@color/white"
+    android:padding="10dp"
+    android:visibility="gone"
+    >
+
+  <TextView
+      android:id="@+id/encrypted_data_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/token"
+      android:textStyle="bold"
+      />
+
+  <View
+      android:id="@+id/divider"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_below="@+id/encrypted_data_title"
+      android:layout_marginBottom="5dp"
+      android:layout_marginTop="5dp"
+      android:background="@color/very_lighter_gray"
+      />
+
+  <TextView
+      android:id="@+id/encrypted_data_view"
+      android:layout_width="match_parent"
+      android:layout_height="100dp"
+      android:layout_below="@+id/divider"
+      />
+
+</RelativeLayout>
