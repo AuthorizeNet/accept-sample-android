@@ -14,7 +14,7 @@ Open the project in Android Studio and Run.
 ## Examples
 The sample application demonstrates usage of Android Pay and Accept Mobile.
 
-![Android Pay](screenshot2.png?raw=true "Android Pay")  ![Accept Token](screenshot1.png?raw=true "Accept Token")
+![Android Pay](screenshot1.png?raw=true "Android Pay")  ![Accept Token](screenshot2.png?raw=true "Accept Token")
 
 
 
