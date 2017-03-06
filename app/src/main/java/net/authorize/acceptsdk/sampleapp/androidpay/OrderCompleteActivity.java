@@ -64,12 +64,11 @@ public class OrderCompleteActivity extends Activity implements OnClickListener {
                 Log.d("AndroidPay", "AndroidPay token before encode :" + tokenJSON);
                 String blob = getBase64Blob(tokenJSON);
                 Log.d("AndroidPay", "AndroidPay Blob" + blob);
-                androidPayBlobView.setText(blob);
 
-                String secBlob = createSecServiceJson(blob);
-                secBlob = getBase64Blob(secBlob);
-                Log.d("Sec Blob" , secBlob);
-                secBlobView.setText(secBlob);
+                String anetBlob = createSecServiceJson(blob);
+                anetBlob = getBase64Blob(anetBlob);
+                Log.d("ANet OpaqueData Blob" , anetBlob);
+                androidPayBlobView.setText(anetBlob);
             }
             return;
         }
@@ -83,25 +82,12 @@ public class OrderCompleteActivity extends Activity implements OnClickListener {
     }
 
     private String createSecServiceJson(String androidPayBlob){
-        String secBlob = "{\"publicKeyHash\": \"" + getPublicKeyHash() + "\"," +
+        String secBlob = "{\"publicKeyHash\": \"" + Constants.PUBLIC_KEY_HASH + "\"," +
                 "\"version\": \"1.0\"," +
                 "\"data\":" + "\"" + androidPayBlob + "\"}";
         return secBlob;
     }
 
-    private String getPublicKeyHash() {
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        byte[] publicKeyHash;
-        byte[] pubKeyBytes = Base64.decode(Constants.PUBLIC_KEY_SEC, Base64.NO_WRAP);
-        publicKeyHash = digest.digest(pubKeyBytes);
-        String publicKeyHashString = new String(Base64.encode(publicKeyHash, Base64.NO_WRAP));
-        return publicKeyHashString;
-    }
 
     @Override
     public void onClick(View v) {

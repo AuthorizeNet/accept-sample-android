@@ -24,16 +24,19 @@ import com.google.android.gms.wallet.WalletConstants;
 public class Constants {
 
     // API LOGIN ID to be used with Signature based authn/authz
-    public static String API_LOGIN_ID = "android_pay_sample_login_id"; // replace with YOUR_API_LOGIN_ID
+    public static String API_LOGIN_ID = "Merchant.AnetTestDev15.AndroidPay"; // replace with YOUR_API_LOGIN_ID
 
     // Public SEC key
    // public static final String PUBLIC_KEY_SEC = "BJl81FGW5WaSkoVgP0Hy5IPHgL3a94glHmInRJtLN5Vz/v219G9Bq2HXqSwumu+OD5hxDNnaMLDrlyTu9fvJ6eA=";
-    public static final String PUBLIC_KEY_SEC = "BO39Rh43UGXMQy5PAWWe7UGWd2a9YRjNLPEEVe+zWIbdIgALcDcnYCuHbmrrzl7h8FZjl6RCzoi5/cDrqXNRVSo=";
+   // public static final String PUBLIC_KEY_SEC = "BO39Rh43UGXMQy5PAWWe7UGWd2a9YRjNLPEEVe+zWIbdIgALcDcnYCuHbmrrzl7h8FZjl6RCzoi5/cDrqXNRVSo=";
+    public static final String PUBLIC_KEY_SEC = "BGK9OhmkVR0hRAgGhBDdIU0MON+RmIzXfBxNs+z8JoasdMoqJ8K+THVnbjr3ljPuJVpwD3ygdFMYgnvND2nY73U=";
 
-  // Environment to use when creating an instance of Wallet.WalletOptions
+    public static final String PUBLIC_KEY_HASH = "YG9GzfyrDQ528NaMZjsqQYJ6ALYuXpAhddUkKjHXddQ=";
+
+    // Environment to use when creating an instance of Wallet.WalletOptions
     public static final int WALLET_ENVIRONMENT = WalletConstants.ENVIRONMENT_TEST;
 
-    public static final String MERCHANT_NAME = "AndroidPay Sample Merchant";
+    public static final String MERCHANT_NAME = "Merchant.AnetTestDev15.AndroidPay";
   //283544558756-ra35r7odv4eftmlrbgt8s3c3298mb5ol.apps.googleusercontent.com - client id
     // Intent extra keys
     public static final String EXTRA_ITEM_ID = "EXTRA_ITEM_ID";
